@@ -1,0 +1,130 @@
+{% extends 'appointments/base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>My Appointments</h2>
+
+    {% if appointments %}
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    {% if request.session.user_type == 'doctor' %}
+                        <th>Patient Name</th>
+                        <th>Phone</th>
+                    {% else %}
+                        <th>Doctor Name</th>
+                        <th>Specialization</th>
+                    {% endif %}
+                    <th>Date & Time</th>
+                    <th>Status</th>
+                    <th>Video Consultation</th>
+                    {% if request.session.user_type == 'doctor' %}
+                        <th>Update Status</th>
+                    {% endif %}
+                    {% if request.session.user_type == 'patient' %}
+                        <th>Delete</th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for appointment in appointments %}
+                <tr>
+                    {% if request.session.user_type == 'doctor' %}
+                        <td>{{ appointment.patient.full_name }}</td>
+                        <td>{{ appointment.patient.phone }}</td>
+                    {% else %}
+                        <td>{{ appointment.doctor.full_name }}</td>
+                        <td>{{ appointment.doctor.specialization }}</td>
+                    {% endif %}
+                    <td>{{ appointment.date_time }}</td>
+                    <td id="status-{{ appointment.id }}">{{ appointment.status }}</td>
+                    
+                    <!-- Video Consultation Link -->
+                    <td id="meeting-link-{{ appointment.id }}">
+                        {% if appointment.status == "Confirmed" and appointment.meeting_link %}
+                            <a href="{{ appointment.meeting_link }}" target="_blank" class="btn btn-info">
+                                <i class="fas fa-video"></i> Join Video Call
+                            </a>
+                        {% else %}
+                            No meeting scheduled
+                        {% endif %}
+                    </td>
+
+                    {% if request.session.user_type == 'doctor' %}
+                        <td>
+                            <select id="status-select-{{ appointment.id }}" class="form-control">
+                                <option value="Pending" {% if appointment.status == "Pending" %}selected{% endif %}>Pending</option>
+                                <option value="Confirmed" {% if appointment.status == "Confirmed" %}selected{% endif %}>Confirmed</option>
+                                <option value="Completed" {% if appointment.status == "Completed" %}selected{% endif %}>Completed</option>
+                            </select>
+                            <button onclick="updateAppointmentStatus({{ appointment.id }})" class="btn btn-primary btn-sm mt-1">
+                                Update
+                            </button>
+                        </td>
+                    {% endif %}
+                    {% if request.session.user_type == 'patient' %}
+                        <td>
+                            <a href="{% url 'delete_appointment' appointment.id %}" 
+                               class="btn btn-danger btn-sm" 
+                               onclick="return confirm('Are you sure you want to delete this appointment?');">
+                                Delete
+                            </a>
+                        </td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No appointments found.</p>
+    {% endif %}
+</div>
+
+<!-- CSRF Token (Hidden) -->
+<input type="hidden" id="csrf-token" value="{{ csrf_token }}">
+
+<!-- JavaScript -->
+<script>
+    function updateAppointmentStatus(appointmentId) {
+    let newStatus = document.getElementById(`status-select-${appointmentId}`).value;
+    let csrfToken = document.getElementById('csrf-token').value;
+
+    fetch(`/update-appointment-status/${appointmentId}/`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": csrfToken
+        },
+        body: JSON.stringify({
+            status: newStatus
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.message) {
+            alert(data.message);
+        }
+
+        // Update status text
+        document.getElementById(`status-${appointmentId}`).innerText = data.status;
+
+        // Update meeting link visibility
+        let meetingLinkCell = document.getElementById(`meeting-link-${appointmentId}`);
+        if (data.status === "Confirmed" && data.meeting_link) {
+            meetingLinkCell.innerHTML = `
+                <a href="${data.meeting_link}" target="_blank" class="btn btn-info">
+                    <i class="fas fa-video"></i> Join Video Call
+                </a>`;
+        } else {
+            meetingLinkCell.innerHTML = "No meeting scheduled";
+        }
+    })
+    .catch(error => {
+        console.error("Error:", error);
+        alert("An error occurred while updating the appointment status.");
+    });
+}
+
+</script>
+
+{% endblock %}

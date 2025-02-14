@@ -1,0 +1,50 @@
+{% extends 'appointments/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Patient Registration</h2>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label class="form-label">Username:</label>
+            <input type="text" name="username" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Password:</label>
+            <input type="password" name="password" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Full Name:</label>
+            <input type="text" name="full_name" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Age:</label>
+            <input type="number" name="age" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Gender:</label>
+            <select name="gender" class="form-control" required>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Phone:</label>
+            <input type="text" name="phone" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Gmail:</label>
+            <input type="text" name="gmail" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-secondary">Register</button>
+    </form>
+</div>
+{% endblock %}

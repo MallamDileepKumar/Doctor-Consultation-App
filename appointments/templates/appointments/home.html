@@ -1,0 +1,102 @@
+{% extends 'appointments/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid bg-light py-5" style="background-image: url('{% static 'images/doctor-bg.jpg' %}'); background-size: cover; background-position: center;">
+    <div class="container text-center text-white">
+        <h2 class="welcome-heading" style="color: black;">Welcome to the Doctor Consultation App</h2>
+        <p class="lead welcome-subtext" style="color: black;">Your Health, Our Priority. Easily book and manage appointments with trusted doctors online.</p>
+
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-6">
+                <div class="card shadow-lg border-0">
+                    <img src="{% static 'images/patient.jpg' %}" class="card-img-top" alt="Patient Services" style="height: 300px;" width="auto">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Manage Your Health Effectively</h5>
+                        <p class="card-text">Join us today and get access to experienced doctors for personalized consultations, all from the comfort of your home.</p>
+                        <a href="{% url 'patient_register' %}" class="btn btn-primary btn-lg"><i class="bi bi-person-plus"></i> Register as Patient</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card shadow-lg border-0">
+                    <img src="{% static 'images/doctor.jpg' %}" class="card-img-top" alt="Doctor Services" style="height: 300px;" width="auto">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Become a Trusted Doctor</h5>
+                        <p class="card-text">Join our platform to reach more patients and offer professional healthcare services online. It's easy to register!</p>
+                        <a href="{% url 'doctor_register' %}" class="btn btn-success btn-lg"><i class="bi bi-person-plus"></i> Register as Doctor</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-5 text-center">
+    <h3>Why Choose Us?</h3>
+    <p class="lead">Our platform connects patients with trusted, experienced doctors for virtual consultations, making healthcare more accessible.</p>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h5 class="card-title">Expert Doctors</h5>
+                    <p class="card-text">We offer access to certified doctors who specialize in various medical fields, ready to assist you with your health concerns.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h5 class="card-title">Convenient Booking</h5>
+                    <p class="card-text">Book your appointment easily from your phone or computer and get timely medical advice without the hassle of visiting a clinic.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h5 class="card-title">Affordable Consultation</h5>
+                    <p class="card-text">Our platform offers affordable rates for both consultations and appointments, ensuring quality healthcare at a lower cost.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+<style>
+    .welcome-heading {
+        font-size: 3rem; /* Larger font size for the main heading */
+        font-weight: 700;
+        color: #ffffff;
+        text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7); /* Text shadow for better readability */
+    }
+
+    .welcome-subtext {
+        font-size: 1.25rem; /* Smaller size for the subheading */
+        color: #ffffff;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7); /* Subtle shadow for contrast */
+    }
+
+    /* Ensuring good visibility on the background image */
+    .container-fluid {
+        background-size: cover;
+        background-position: center;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        border-color: #28a745;
+    }
+
+    .btn-lg {
+        padding: 1rem 2rem;
+        font-size: 1.2rem;
+    }
+</style>
